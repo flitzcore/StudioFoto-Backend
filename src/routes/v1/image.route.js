@@ -1,37 +1,37 @@
 const express = require('express');
 const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const imageValidation = require('../../validations/image.validation');
+const imageController = require('../../controllers/image.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(validate(userValidation.createUser), userController.createUser)
-  .get(validate(userValidation.getUsers), userController.getUsers);
+  .post(validate(imageValidation.createImage), imageController.createImage)
+  .get(validate(imageValidation.getImages), imageController.getImages);
 
 router
-  .route('/:userId')
-  .get(validate(userValidation.getUser), userController.getUser)
-  .patch(validate(userValidation.updateUser), userController.updateUser)
-  .delete(validate(userValidation.deleteUser), userController.deleteUser);
+  .route('/:imageId')
+  .get(validate(imageValidation.getImage), imageController.getImage)
+  .patch(validate(imageValidation.updateImage), imageController.updateImage)
+  .delete(validate(imageValidation.deleteImage), imageController.deleteImage);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Users
- *   description: User management and retrieval
+ *   name: Images
+ *   description: Image management and retrieval
  */
 
 /**
  * @swagger
- * /users:
+ * /images:
  *   post:
- *     summary: Create a user
- *     description: Only admins can create other users.
- *     tags: [Users]
+ *     summary: Create a image
+ *     description: Only admins can create other images.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -59,19 +59,19 @@ module.exports = router;
  *                 description: At least one number and one letter
  *               role:
  *                  type: string
- *                  enum: [user, admin]
+ *                  enum: [image, admin]
  *             example:
  *               name: fake name
  *               email: fake@example.com
  *               password: password1
- *               role: user
+ *               role: image
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Image'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -80,9 +80,9 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all users
- *     description: Only admins can retrieve all users.
- *     tags: [Users]
+ *     summary: Get all images
+ *     description: Only admins can retrieve all images.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -90,12 +90,12 @@ module.exports = router;
  *         name: name
  *         schema:
  *           type: string
- *         description: User name
+ *         description: Image name
  *       - in: query
  *         name: role
  *         schema:
  *           type: string
- *         description: User role
+ *         description: Image role
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -107,7 +107,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of images
  *       - in: query
  *         name: page
  *         schema:
@@ -126,7 +126,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/Image'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -147,11 +147,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /users/{id}:
+ * /images/{id}:
  *   get:
- *     summary: Get a user
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
- *     tags: [Users]
+ *     summary: Get a image
+ *     description: Logged in images can fetch only their own image information. Only admins can fetch other images.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -160,14 +160,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Image id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Image'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -176,9 +176,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user
- *     description: Logged in users can only update their own information. Only admins can update other users.
- *     tags: [Users]
+ *     summary: Update a image
+ *     description: Logged in images can only update their own information. Only admins can update other images.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -187,7 +187,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Image id
  *     requestBody:
  *       required: true
  *       content:
@@ -216,7 +216,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Image'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -227,9 +227,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a user
- *     description: Logged in users can delete only themselves. Only admins can delete other users.
- *     tags: [Users]
+ *     summary: Delete a image
+ *     description: Logged in images can delete only themselves. Only admins can delete other images.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -238,7 +238,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Image id
  *     responses:
  *       "200":
  *         description: No content
