@@ -1,54 +1,49 @@
 const Joi = require('joi');
-const { password, objectId } = require('./custom.validation');
+const { objectId } = require('./custom.validation');
 
-const createUser = {
+const createImage = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
-    role: Joi.string().required().valid('user', 'admin'),
+    title: Joi.string().required(),
+    caption: Joi.string().required(),
+    file: Joi.string().required(),
   }),
 };
 
-const getUsers = {
+const getImages = {
   query: Joi.object().keys({
-    name: Joi.string(),
-    role: Joi.string(),
-    sortBy: Joi.string(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer(),
+    title: Joi.string(),
   }),
 };
 
-const getUser = {
+const getImage = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    imageId: Joi.string().custom(objectId),
   }),
 };
 
-const updateUser = {
+const updateImage = {
   params: Joi.object().keys({
-    userId: Joi.required().custom(objectId),
+    imageId: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
-      email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      name: Joi.string(),
+      title: Joi.string(),
+      caption: Joi.string(),
+      file: Joi.string(),
     })
     .min(1),
 };
 
-const deleteUser = {
+const deleteImage = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    imageId: Joi.string().custom(objectId),
   }),
 };
 
 module.exports = {
-  createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser,
+  createImage,
+  getImages,
+  getImage,
+  updateImage,
+  deleteImage,
 };

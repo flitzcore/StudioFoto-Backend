@@ -1,11 +1,14 @@
 const httpStatus = require('http-status');
+
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
+
 const catchAsync = require('../utils/catchAsync');
 const { imageService } = require('../services');
 
 const createImage = catchAsync(async (req, res) => {
-  const image = await imageService.createImage(req.body);
+  const file = req.files.file[0];
+  const image = await imageService.createImage(req.body, file);
   res.status(httpStatus.CREATED).send(image);
 });
 
@@ -25,7 +28,7 @@ const getImage = catchAsync(async (req, res) => {
 });
 
 const updateImage = catchAsync(async (req, res) => {
-  const image = await imageService.updateImageById(req.params.imageId, req.body);
+  const image = await imageService.updateImageById(req.params.imageId, req);
   res.send(image);
 });
 
