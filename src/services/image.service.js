@@ -119,7 +119,6 @@ const updateImageById = async (imageId, req) => {
     const newUrl = await uploadFileToStorage(file);
     rawImage.imgUrl = newUrl;
   }
-  console.log(rawImage);
   Object.assign(image, updateBody);
   await image.save();
   await deleteObject(imageRefToDelete);
