@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const axios = require('axios');
 const config = require('../config/config');
 const { Booking } = require('../models');
+const emailService = require('./email.service');
 const ApiError = require('../utils/ApiError');
 
 const generateExternalId = () => {
@@ -113,6 +114,53 @@ const deleteBookingById = async (bookingId) => {
   await booking.remove();
   return booking;
 };
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const options = { day: '2-digit', month: 'long', year: 'numeric' };
+  return date.toLocaleDateString('id-ID', options);
+}
+/**
+ * Send complete email
+ * @param {string} to
+ * @param {string} name
+ * @param {string} date
+ * @returns {Promise}
+ */
+const sendServiceCompletedEmail = async (to, name, date) => {
+  const subject = 'Terima Kasih Atas Kepercayaan Anda pada Potrait Plus';
+  const text = `Dear ${name},
+Terima kasih telah memilih Potrait Plus untuk kebutuhan fotografi Anda. Kami berharap pengalaman Anda bersama kami memberikan kenangan yang indah dan hasil yang memuaskan.
+
+Kami ingin mengonfirmasi bahwa kami telah menerima pembayaran penuh untuk layanan pada ${formatDate(
+    date
+  )}. Kami sangat menghargai kepercayaan Anda pada layanan kami dan berterima kasih atas kesempatan untuk melayani Anda.
+
+Jika Anda memiliki pertanyaan atau membutuhkan informasi lebih lanjut, jangan ragu untuk menghubungi kami. Kami juga senang menerima masukan atau testimoni dari Anda, yang bisa sangat membantu kami untuk meningkatkan layanan di masa mendatang.
+
+Kami berharap dapat kembali bekerja sama dengan Anda di kesempatan berikutnya.
+
+Terima kasih sekali lagi atas dukungan Anda :)`;
+  await emailService.sendEmail(to, subject, text);
+};
+/**
+ * Send dp email
+ * @param {string} to
+ * @param {string} name
+ * @param {string} date
+ * @returns {Promise}
+ */
+const sendDpCompletedEmail = async (to, amount, name, date, url) => {
+  const subject = 'Konfirmasi Pembayaran Uang Muka dan Informasi Pembayaran Selanjutnya';
+  const text = `Dear ${name},
+Terima kasih telah melakukan pembayaran uang muka untuk layanan kami. Kami ingin mengonfirmasi bahwa kami telah menerima pembayaran Anda sebesar ${amount} pada ${formatDate(
+    date
+  )}.
+
+Untuk melanjutkan proses dan menyelesaikan pembayaran penuh, silakan kunjungi tautan berikut: ${url}
+
+Pembayaran penuh dapat dilakukan melalui tautan di atas. Apabila Anda memiliki pertanyaan atau memerlukan bantuan lebih lanjut, jangan ragu untuk menghubungi kami.`;
+  await emailService.sendEmail(to, subject, text);
+};
 const setInvoicePaid = async (invoiceBody) => {
   const booking = await Booking.findOne({ invoiceId: invoiceBody.id });
   if (!booking) {
@@ -121,6 +169,7 @@ const setInvoicePaid = async (invoiceBody) => {
 
   if (booking.totalPrice - booking.totalPaid - invoiceBody.paid_amount === 0) {
     booking.status = 'COMPLETED';
+    sendServiceCompletedEmail(booking.email, booking.name, booking.date);
   } else if (booking.totalPrice - booking.totalPaid - invoiceBody.paid_amount > 0) {
     booking.status = 'AWAIT_FULLPAYMENT';
   }
@@ -137,6 +186,13 @@ const setInvoicePaid = async (invoiceBody) => {
     if (!xenditResponse) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create invoice');
     }
+    sendDpCompletedEmail(
+      booking.email,
+      booking.totalPrice - booking.totalPaid,
+      booking.name,
+      xenditResponse.data.created,
+      xenditResponse.data.invoice_url
+    );
     booking.invoiceId = xenditResponse.data.id;
   }
   await booking.save();
