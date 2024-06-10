@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const { toJSON, paginate } = require('./plugins');
-const { priceList } = require('../config/priceList');
+// const { priceList } = require('../config/priceList');
 
 const bookingSchema = mongoose.Schema(
   {
@@ -9,6 +9,10 @@ const bookingSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    description: {
+      type: String,
+      required: true,
     },
     email: {
       type: String,
@@ -38,11 +42,12 @@ const bookingSchema = mongoose.Schema(
     totalPaid: {
       type: Number,
       required: true,
+      default: 0,
     },
-    isPaid: {
-      type: Boolean,
-      required: true,
-      default: false, // Defaulting to false, assuming payment is not complete initially
+    status: {
+      type: String,
+      enum: ['PENDING', 'AWAIT_DOWNPAYMENT', 'AWAIT_FULLPAYMENT', 'CANCELED', 'COMPLETED'],
+      default: 'PENDING',
     },
   },
   {

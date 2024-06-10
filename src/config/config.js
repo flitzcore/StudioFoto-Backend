@@ -24,6 +24,7 @@ const envVarsSchema = Joi.object()
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
     BUCKET_URL: Joi.string().description('cloud storage bucket url'),
+    XENDIT_API_KEY: Joi.string().description('xendit key for payment gateway'),
   })
   .unknown();
 
@@ -64,5 +65,8 @@ module.exports = {
   },
   storage: {
     url: envVars.BUCKET_URL,
+  },
+  xendit: {
+    apiKey: envVars.XENDIT_API_KEY,
   },
 };

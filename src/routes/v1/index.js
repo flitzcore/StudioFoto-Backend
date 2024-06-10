@@ -1,5 +1,6 @@
 const express = require('express');
 const imageRoute = require('./image.route');
+const bookingRoute = require('./booking.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -9,6 +10,10 @@ const defaultRoutes = [
   {
     path: '/images',
     route: imageRoute,
+  },
+  {
+    path: '/booking',
+    route: bookingRoute,
   },
 ];
 
