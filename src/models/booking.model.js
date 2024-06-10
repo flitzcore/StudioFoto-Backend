@@ -10,6 +10,10 @@ const bookingSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    invoiceId: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: true,

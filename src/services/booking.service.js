@@ -26,6 +26,7 @@ const sendToXendit = async (bookingData) => {
   };
 
   const response = await axios(xenditConfig);
+
   return response;
 };
 /**
@@ -56,6 +57,7 @@ const createBooking = async (bookingBody) => {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create invoice');
   }
   // Set the real total price before save it to the database
+  bookingData.invoiceId = xenditResponse.data.id;
   bookingData.totalPrice = bookingBody.price + bookingBody.dp;
   await Booking.create(bookingData);
   // Create a new object with all properties of booking except invoiceId
@@ -111,6 +113,35 @@ const deleteBookingById = async (bookingId) => {
   await booking.remove();
   return booking;
 };
+const setInvoicePaid = async (invoiceBody) => {
+  const booking = await Booking.findOne({ invoiceId: invoiceBody.id });
+  if (!booking) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Booking not found');
+  }
+
+  if (booking.totalPrice - booking.totalPaid - invoiceBody.paid_amount === 0) {
+    booking.status = 'COMPLETED';
+  } else if (booking.totalPrice - booking.totalPaid - invoiceBody.paid_amount > 0) {
+    booking.status = 'AWAIT_FULLPAYMENT';
+  }
+  booking.totalPaid += invoiceBody.paid_amount;
+  if (booking.status === 'AWAIT_FULLPAYMENT') {
+    const bookingData = {
+      totalPrice: booking.totalPrice - booking.totalPaid,
+      email: booking.email,
+      description: `Remaining Payment: ${booking.description}`,
+    };
+
+    const xenditResponse = await sendToXendit(bookingData);
+    console.log(xenditResponse.data.invoice_url);
+    if (!xenditResponse) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create invoice');
+    }
+    booking.invoiceId = xenditResponse.data.id;
+  }
+  await booking.save();
+  return booking;
+};
 
 module.exports = {
   createBooking,
@@ -118,4 +149,5 @@ module.exports = {
   getBookingById,
   getBookingByEmail,
   deleteBookingById,
+  setInvoicePaid,
 };

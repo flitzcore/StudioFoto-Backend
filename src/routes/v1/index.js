@@ -1,6 +1,7 @@
 const express = require('express');
 const imageRoute = require('./image.route');
 const bookingRoute = require('./booking.route');
+const webhookRoute = require('./webhook.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -14,6 +15,10 @@ const defaultRoutes = [
   {
     path: '/booking',
     route: bookingRoute,
+  },
+  {
+    path: '/hook',
+    route: webhookRoute,
   },
 ];
 

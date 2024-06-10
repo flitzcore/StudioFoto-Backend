@@ -13,7 +13,7 @@ const createBooking = catchAsync(async (req, res) => {
 });
 
 const getBookings = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['name', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await bookingService.queryBookings(filter, options);
   res.send(result);
@@ -31,10 +31,15 @@ const deleteBooking = catchAsync(async (req, res) => {
   await bookingService.deleteBookingById(req.params.bookingId);
   res.status(httpStatus.NO_CONTENT).send();
 });
+const invoicePaid = catchAsync(async (req, res) => {
+  await bookingService.setInvoicePaid(req.body);
+  res.status(httpStatus.NO_CONTENT).send();
+});
 
 module.exports = {
   createBooking,
   getBookings,
   getBooking,
   deleteBooking,
+  invoicePaid,
 };
