@@ -12,6 +12,8 @@ const createImage = {
 const getImages = {
   query: Joi.object().keys({
     title: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
   }),
 };
 

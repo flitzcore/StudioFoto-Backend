@@ -59,7 +59,7 @@ const createBooking = async (bookingBody) => {
   }
   // Set the real total price before save it to the database
   bookingData.invoiceId = xenditResponse.data.id;
-  bookingData.totalPrice = bookingBody.price + bookingBody.dp;
+  bookingData.totalPrice = bookingBody.price;
   await Booking.create(bookingData);
   // Create a new object with all properties of booking except invoiceId
   const responseObject = {
@@ -182,7 +182,7 @@ const setInvoicePaid = async (invoiceBody) => {
     };
 
     const xenditResponse = await sendToXendit(bookingData);
-    console.log(xenditResponse.data.invoice_url);
+    // console.log(xenditResponse.data.invoice_url);
     if (!xenditResponse) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create invoice');
     }
