@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 const config = require('../config/config');
 const logger = require('../config/logger');
 
@@ -19,10 +20,27 @@ if (config.env !== 'test') {
  * @returns {Promise}
  */
 const sendEmail = async (to, subject, text) => {
-  const msg = { from: config.email.from, to, subject, text };
-  await new Promise((resolve, reject) => {
-    transport.sendMail(msg);
-  });
+  // const msg = { from: config.email.from, to, subject, text };
+  // await new Promise((resolve, reject) => {
+  //   transport.sendMail(msg);
+  // });
+  const data = {
+    from: config.email.from,
+    to,
+    subject,
+    text,
+  };
+
+  const emailConfig = {
+    method: 'post',
+    url: 'https://api.resend.com/emails',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${config.email.smtp.auth.pass}`,
+    },
+    data,
+  };
+  await axios(emailConfig);
 };
 
 // /**
