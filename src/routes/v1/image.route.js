@@ -7,26 +7,36 @@ const imageController = require('../../controllers/image.controller');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
+// router
+//   .route('/')
+//   .post(
+//     auth('manageImages'),
+//     upload.fields([{ name: 'file', maxCount: 1 }]),
+//     validate(imageValidation.createImages),
+//     imageController.createImage
+//   )
+//   .get(validate(imageValidation.getImages), imageController.getImages);
+
+// router
+//   .route('/:imageId')
+//   .get(validate(imageValidation.getImage), imageController.getImage)
+//   .patch(
+//     auth('manageImages'),
+//     upload.fields([{ name: 'file', maxCount: 1 }]),
+//     validate(imageValidation.updateImage),
+//     imageController.updateImage
+//   )
+//   .delete(auth('manageImages'), validate(imageValidation.deleteImage), imageController.deleteImage);
 router
   .route('/')
-  .post(
-    auth('manageImages'),
-    upload.fields([{ name: 'file', maxCount: 1 }]),
-    validate(imageValidation.createImages),
-    imageController.createImage
-  )
+  .post(upload.fields([{ name: 'file', maxCount: 1 }]), validate(imageValidation.createImages), imageController.createImage)
   .get(validate(imageValidation.getImages), imageController.getImages);
 
 router
   .route('/:imageId')
   .get(validate(imageValidation.getImage), imageController.getImage)
-  .patch(
-    auth('manageImages'),
-    upload.fields([{ name: 'file', maxCount: 1 }]),
-    validate(imageValidation.updateImage),
-    imageController.updateImage
-  )
-  .delete(auth('manageImages'), validate(imageValidation.deleteImage), imageController.deleteImage);
+  .patch(upload.fields([{ name: 'file', maxCount: 1 }]), validate(imageValidation.updateImage), imageController.updateImage)
+  .delete(validate(imageValidation.deleteImage), imageController.deleteImage);
 
 module.exports = router;
 
