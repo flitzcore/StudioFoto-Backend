@@ -20,7 +20,7 @@ const createUser = {
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     username: Joi.string().required(),
-    role: Joi.string().required().valid('receptionist', 'branch_manager', 'owner', 'admin'),
+    role: Joi.string().required().valid('user', 'admin'),
   }),
 };
 
@@ -48,8 +48,7 @@ const updateUser = {
     .keys({
       email: Joi.string().email(),
       password: Joi.string().custom(password),
-      name: Joi.string(),
-      hotel_id: Joi.string().custom(objectId),
+      username: Joi.string(),
     })
     .min(1),
 };
