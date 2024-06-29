@@ -6,25 +6,25 @@ const bookingController = require('../../controllers/booking.controller');
 
 const router = express.Router();
 
-// router
-//   .route('/')
-//   .post(validate(bookingValidation.createBooking), bookingController.createBooking)
-//   .get(auth('getBookings'), validate(bookingValidation.getBookings), bookingController.getBookings);
-
-// router
-//   .route('/:bookingId')
-//   .get(auth('getBookings'), validate(bookingValidation.getBooking), bookingController.getBooking)
-//   .delete(auth('manageBookings'), validate(bookingValidation.deleteBooking), bookingController.deleteBooking);
-
 router
   .route('/')
   .post(validate(bookingValidation.createBooking), bookingController.createBooking)
-  .get(validate(bookingValidation.getBookings), bookingController.getBookings);
+  .get(auth('getBookings'), validate(bookingValidation.getBookings), bookingController.getBookings);
 
 router
   .route('/:bookingId')
-  .get(validate(bookingValidation.getBooking), bookingController.getBooking)
-  .delete(validate(bookingValidation.deleteBooking), bookingController.deleteBooking);
+  .get(auth('getBookings'), validate(bookingValidation.getBooking), bookingController.getBooking)
+  .delete(auth('manageBookings'), validate(bookingValidation.deleteBooking), bookingController.deleteBooking);
+
+// router
+//   .route('/')
+//   .post(validate(bookingValidation.createBooking), bookingController.createBooking)
+//   .get(validate(bookingValidation.getBookings), bookingController.getBookings);
+
+// router
+//   .route('/:bookingId')
+//   .get(validate(bookingValidation.getBooking), bookingController.getBooking)
+//   .delete(validate(bookingValidation.deleteBooking), bookingController.deleteBooking);
 
 module.exports = router;
 
