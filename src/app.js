@@ -39,9 +39,8 @@ app.use(compression());
 
 // enable cors
 const corsOptions = {
-  origin: ['*'], // Array of allowed origins
+  origin: '*', // Array of allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed methods
-  allowedHeaders: 'Authorization,Origin,X-Requested-With,Content-Type,Accept', // Allowed headers
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 };
 app.use(cors(corsOptions));
