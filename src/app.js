@@ -38,8 +38,14 @@ app.use(mongoSanitize());
 app.use(compression());
 
 // enable cors
-app.use(cors());
-app.options('*', cors());
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://your-production-site.com'], // Array of allowed origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed methods
+  allowedHeaders: 'Authorization,Origin,X-Requested-With,Content-Type,Accept', // Allowed headers
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+};
+app.use(cors(corsOptions));
+app.options('*', cors()); // Pre-flight for all routes
 
 // jwt authentication
 app.use(passport.initialize());
