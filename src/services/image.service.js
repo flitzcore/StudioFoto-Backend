@@ -121,7 +121,9 @@ const updateImageById = async (imageId, req) => {
   }
   Object.assign(image, updateBody);
   await image.save();
-  await deleteObject(imageRefToDelete);
+  if (imageRefToDelete) {
+    await deleteObject(imageRefToDelete);
+  }
   return image;
 };
 
