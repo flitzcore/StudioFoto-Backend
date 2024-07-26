@@ -15,8 +15,8 @@ router
     validate(imageValidation.createImages),
     imageController.createImage
   )
-  .get(validate(imageValidation.getImages), imageController.getImages);
-
+  .get(validate(imageValidation.getImages), imageController.getImages)
+  .delete(auth('manageImages'), validate(imageValidation.deleteAllImage), imageController.deleteAllImage);
 router
   .route('/:imageId')
   .get(validate(imageValidation.getImage), imageController.getImage)

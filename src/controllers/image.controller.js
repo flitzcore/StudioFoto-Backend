@@ -36,6 +36,24 @@ const deleteImage = catchAsync(async (req, res) => {
   await imageService.deleteImageById(req.params.imageId);
   res.status(httpStatus.NO_CONTENT).send();
 });
+const deleteAllImage = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['title']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await imageService.queryImages(filter, options);
+
+  if (result) {
+    // Iterate over each image and delete it by its ID
+    await Promise.all(
+      result.results.map(async (image) => {
+        await imageService.deleteImageById(image.id);
+      })
+    );
+  } else {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No images found');
+  }
+
+  res.status(httpStatus.NO_CONTENT).send();
+});
 
 module.exports = {
   createImage,
@@ -43,4 +61,5 @@ module.exports = {
   getImage,
   updateImage,
   deleteImage,
+  deleteAllImage,
 };

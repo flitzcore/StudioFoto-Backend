@@ -44,11 +44,16 @@ const deleteImage = {
     imageId: Joi.string().custom(objectId),
   }),
 };
-
+const deleteAllImage = {
+  query: Joi.object().keys({
+    title: Joi.string().required(),
+  }),
+};
 module.exports = {
   createImage,
   getImages,
   getImage,
   updateImage,
   deleteImage,
+  deleteAllImage,
 };
