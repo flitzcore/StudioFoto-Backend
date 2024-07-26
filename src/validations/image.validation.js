@@ -4,6 +4,7 @@ const { objectId } = require('./custom.validation');
 const createImage = {
   body: Joi.object().keys({
     title: Joi.string().required(),
+    tag: Joi.string(),
     caption: Joi.string().required(),
     file: Joi.string().required(),
   }),
@@ -12,6 +13,7 @@ const createImage = {
 const getImages = {
   query: Joi.object().keys({
     title: Joi.string(),
+    tag: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
@@ -30,6 +32,7 @@ const updateImage = {
   body: Joi.object()
     .keys({
       title: Joi.string(),
+      tag: Joi.string(),
       caption: Joi.string(),
       file: Joi.string(),
     })

@@ -9,6 +9,10 @@ const imageSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    tag: {
+      type: String,
+      trim: true,
+    },
     caption: {
       type: String,
       required: true,

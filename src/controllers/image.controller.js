@@ -13,7 +13,7 @@ const createImage = catchAsync(async (req, res) => {
 });
 
 const getImages = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['title', 'tag']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await imageService.queryImages(filter, options);
   res.send(result);
