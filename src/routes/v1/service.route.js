@@ -4,14 +4,17 @@ const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const serviceValidation = require('../../validations/service.validation');
 const serviceController = require('../../controllers/service.controller');
+const subServiceController = require('../../controllers/subservice.controller');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
+
+// Routes for services
 router
   .route('/')
   .post(
     auth('manageServices'),
-    upload.fields([{ name: 'img', maxCount: 1 }]),
+    upload.fields([{ name: 'file', maxCount: 1 }]),
     validate(serviceValidation.createService),
     serviceController.createService
   )
@@ -28,6 +31,28 @@ router
     serviceController.updateService
   )
   .delete(auth('manageServices'), validate(serviceValidation.deleteService), serviceController.deleteService);
+
+// Routes for subServices
+router
+  .route('/:serviceId/subservice')
+  .post(
+    auth('manageServices'),
+    upload.fields([{ name: 'file', maxCount: 1 }]),
+    validate(serviceValidation.createSubService),
+    subServiceController.createSubService
+  )
+  .get(validate(serviceValidation.getSubServices), subServiceController.getSubServices);
+
+router
+  .route('/:serviceId/subservice/:subServiceId')
+  .get(validate(serviceValidation.getSubService), subServiceController.getSubService)
+  .patch(
+    auth('manageServices'),
+    upload.fields([{ name: 'file', maxCount: 1 }]),
+    validate(serviceValidation.updateSubService),
+    subServiceController.updateSubService
+  )
+  .delete(auth('manageServices'), validate(serviceValidation.deleteSubService), subServiceController.deleteSubService);
 
 module.exports = router;
 

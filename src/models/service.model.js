@@ -9,33 +9,44 @@ const serviceSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    subtitle: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     description: {
       type: String,
       required: true,
       trim: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    condition: {
-      type: [String],
-      default: [],
-    },
-    addon: {
-      type: [String],
-      default: [],
     },
     imgUrl: {
       type: String,
       default:
         'https://firebasestorage.googleapis.com/v0/b/imagehost-425407.appspot.com/o/img%2Flogo.png?alt=media&token=9661da31-163f-46c2-8027-bb48f7d6e28c',
       trim: true,
+    },
+    subService: {
+      type: [
+        {
+          title: {
+            type: String,
+            trim: true,
+          },
+          addon: {
+            type: String,
+            trim: true,
+          },
+          condition: {
+            type: String,
+            trim: true,
+          },
+          imgUrl: {
+            type: String,
+            trim: true,
+            default:
+              'https://firebasestorage.googleapis.com/v0/b/imagehost-425407.appspot.com/o/img%2Flogo.png?alt=media&token=9661da31-163f-46c2-8027-bb48f7d6e28c',
+          },
+          price: {
+            type: Number,
+          },
+        },
+      ],
+      default: null,
     },
   },
   {

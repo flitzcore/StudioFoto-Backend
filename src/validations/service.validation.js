@@ -4,12 +4,8 @@ const { objectId } = require('./custom.validation');
 const createService = {
   body: Joi.object().keys({
     title: Joi.string().required().trim(),
-    subtitle: Joi.string().required().trim(),
     description: Joi.string().required().trim(),
-    price: Joi.number().required(),
-    img: Joi.string(),
-    condition: Joi.array().items(Joi.string().trim()).default([]),
-    addon: Joi.array().items(Joi.string().trim()).default([]),
+    file: Joi.string(),
   }),
 };
 
@@ -37,11 +33,7 @@ const updateService = {
   body: Joi.object()
     .keys({
       title: Joi.string().trim(),
-      subtitle: Joi.string().trim(),
       description: Joi.string().trim(),
-      price: Joi.number(),
-      condition: Joi.array().items(Joi.string().trim()),
-      addon: Joi.array().items(Joi.string().trim()),
       file: Joi.string(),
     })
     .min(1), // Ensure at least one field is being updated
@@ -53,10 +45,65 @@ const deleteService = {
   }),
 };
 
+// SubService validation
+const createSubService = {
+  params: Joi.object().keys({
+    serviceId: Joi.string().custom(objectId).required(),
+  }),
+  body: Joi.object().keys({
+    title: Joi.string().required().trim(),
+    addon: Joi.string().trim(),
+    condition: Joi.string().trim(),
+    file: Joi.string(),
+    price: Joi.number().integer(),
+  }),
+};
+
+const getSubServices = {
+  params: Joi.object().keys({
+    serviceId: Joi.string().custom(objectId).required(),
+  }),
+};
+
+const getSubService = {
+  params: Joi.object().keys({
+    serviceId: Joi.string().custom(objectId).required(),
+    subServiceId: Joi.string().custom(objectId).required(),
+  }),
+};
+
+const updateSubService = {
+  params: Joi.object().keys({
+    serviceId: Joi.string().custom(objectId).required(),
+    subServiceId: Joi.string().custom(objectId).required(),
+  }),
+  body: Joi.object()
+    .keys({
+      title: Joi.string().trim(),
+      addon: Joi.string().trim(),
+      condition: Joi.string().trim(),
+      file: Joi.string(),
+      price: Joi.number().integer(),
+    })
+    .min(1), // Ensure at least one field is being updated
+};
+
+const deleteSubService = {
+  params: Joi.object().keys({
+    serviceId: Joi.string().custom(objectId).required(),
+    subServiceId: Joi.string().custom(objectId).required(),
+  }),
+};
+
 module.exports = {
   createService,
   getServices,
   getService,
   updateService,
   deleteService,
+  createSubService,
+  getSubServices,
+  getSubService,
+  updateSubService,
+  deleteSubService,
 };
