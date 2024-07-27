@@ -4,6 +4,7 @@ const { objectId } = require('./custom.validation');
 const createService = {
   body: Joi.object().keys({
     title: Joi.string().required().trim(),
+    subtitle: Joi.string().required().trim(),
     description: Joi.string().required().trim(),
     price: Joi.number().required(),
     condition: Joi.array().items(Joi.string().trim()).default([]),
@@ -35,6 +36,7 @@ const updateService = {
   body: Joi.object()
     .keys({
       title: Joi.string().trim(),
+      subtitle: Joi.string().trim(),
       description: Joi.string().trim(),
       price: Joi.number(),
       condition: Joi.array().items(Joi.string().trim()),

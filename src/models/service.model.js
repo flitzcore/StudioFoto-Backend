@@ -9,6 +9,11 @@ const serviceSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    subtitle: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     description: {
       type: String,
       required: true,
