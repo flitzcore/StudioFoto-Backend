@@ -27,16 +27,6 @@ router
     imageController.updateImage
   )
   .delete(auth('manageImages'), validate(imageValidation.deleteImage), imageController.deleteImage);
-// router
-//   .route('/')
-//   .post(upload.fields([{ name: 'file', maxCount: 1 }]), validate(imageValidation.createImages), imageController.createImage)
-//   .get(validate(imageValidation.getImages), imageController.getImages);
-
-// router
-//   .route('/:imageId')
-//   .get(validate(imageValidation.getImage), imageController.getImage)
-//   .patch(upload.fields([{ name: 'file', maxCount: 1 }]), validate(imageValidation.updateImage), imageController.updateImage)
-//   .delete(validate(imageValidation.deleteImage), imageController.deleteImage);
 
 module.exports = router;
 

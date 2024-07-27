@@ -1,14 +1,19 @@
 const httpStatus = require('http-status');
 const { Service } = require('../models');
 const ApiError = require('../utils/ApiError');
-
+const { uploadFileToStorage, getImageRef, deleteObject } = require('./image.service');
 /**
  * Create a service
  * @param {Object} serviceBody
  * @returns {Promise<Service>}
  */
-const createService = async (serviceBody) => {
-  return Service.create(serviceBody);
+const createService = async (serviceBody, file) => {
+  const url = await uploadFileToStorage(file);
+  const rawService = {
+    ...serviceBody,
+    imgUrl: url,
+  };
+  return Service.create(rawService);
 };
 
 /**
@@ -40,13 +45,26 @@ const getServiceById = async (id) => {
  * @param {Object} updateBody
  * @returns {Promise<Service>}
  */
-const updateServiceById = async (serviceId, updateBody) => {
+const updateServiceById = async (serviceId, req) => {
+  const updateBody = req.body;
   const service = await getServiceById(serviceId);
+  let imageRefToDelete;
   if (!service) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Service not found');
   }
+  const rawService = updateBody;
+  const file = req.files && req.files.file ? req.files.file[0] : null;
+
+  if (file) {
+    imageRefToDelete = getImageRef(service.imgUrl);
+    const newUrl = await uploadFileToStorage(file);
+    rawService.imgUrl = newUrl;
+  }
   Object.assign(service, updateBody);
   await service.save();
+  if (imageRefToDelete) {
+    await deleteObject(imageRefToDelete);
+  }
   return service;
 };
 

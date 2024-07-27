@@ -31,6 +31,12 @@ const serviceSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    imgUrl: {
+      type: String,
+      default:
+        'https://firebasestorage.googleapis.com/v0/b/imagehost-425407.appspot.com/o/img%2Flogo.png?alt=media&token=9661da31-163f-46c2-8027-bb48f7d6e28c',
+      trim: true,
+    },
   },
   {
     timestamps: true,

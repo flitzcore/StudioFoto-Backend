@@ -144,6 +144,9 @@ const deleteImageById = async (imageId) => {
 };
 
 module.exports = {
+  getImageRef,
+  deleteObject,
+  uploadFileToStorage,
   createImage,
   queryImages,
   getImageById,

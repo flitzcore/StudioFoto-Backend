@@ -1,21 +1,32 @@
 const express = require('express');
+const multer = require('multer');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const serviceValidation = require('../../validations/service.validation');
 const serviceController = require('../../controllers/service.controller');
 
 const router = express.Router();
-
+const upload = multer({ storage: multer.memoryStorage() });
 router
   .route('/')
-  .post(auth('manageServices'), validate(serviceValidation.createService), serviceController.createService)
+  .post(
+    auth('manageServices'),
+    upload.fields([{ name: 'img', maxCount: 1 }]),
+    validate(serviceValidation.createService),
+    serviceController.createService
+  )
   .get(validate(serviceValidation.getServices), serviceController.getServices)
   .delete(auth('manageServices'), validate(serviceValidation.deleteAllServices), serviceController.deleteAllServices);
 
 router
   .route('/:serviceId')
   .get(validate(serviceValidation.getService), serviceController.getService)
-  .patch(auth('manageServices'), validate(serviceValidation.updateService), serviceController.updateService)
+  .patch(
+    auth('manageServices'),
+    upload.fields([{ name: 'file', maxCount: 1 }]),
+    validate(serviceValidation.updateService),
+    serviceController.updateService
+  )
   .delete(auth('manageServices'), validate(serviceValidation.deleteService), serviceController.deleteService);
 
 module.exports = router;

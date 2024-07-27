@@ -7,6 +7,7 @@ const createService = {
     subtitle: Joi.string().required().trim(),
     description: Joi.string().required().trim(),
     price: Joi.number().required(),
+    img: Joi.string(),
     condition: Joi.array().items(Joi.string().trim()).default([]),
     addon: Joi.array().items(Joi.string().trim()).default([]),
   }),
@@ -41,6 +42,7 @@ const updateService = {
       price: Joi.number(),
       condition: Joi.array().items(Joi.string().trim()),
       addon: Joi.array().items(Joi.string().trim()),
+      file: Joi.string(),
     })
     .min(1), // Ensure at least one field is being updated
 };

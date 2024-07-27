@@ -5,7 +5,8 @@ const catchAsync = require('../utils/catchAsync');
 const { serviceService } = require('../services');
 
 const createService = catchAsync(async (req, res) => {
-  const service = await serviceService.createService(req.body);
+  const file = req.files.img[0];
+  const service = await serviceService.createService(req.body, file);
   res.status(httpStatus.CREATED).send(service);
 });
 
@@ -25,7 +26,7 @@ const getService = catchAsync(async (req, res) => {
 });
 
 const updateService = catchAsync(async (req, res) => {
-  const service = await serviceService.updateServiceById(req.params.serviceId, req.body);
+  const service = await serviceService.updateServiceById(req.params.serviceId, req);
   res.send(service);
 });
 
