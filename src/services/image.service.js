@@ -8,12 +8,12 @@ const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDIC7j0su8Rdymgtz_-Q2vH4QHH05jUias',
-  authDomain: 'imagehost-425407.firebaseapp.com',
-  projectId: 'imagehost-425407',
+  apiKey: 'API_KEY',
+  authDomain: 'AuthDOmain',
+  projectId: 'ProjectId',
   storageBucket: 'imagehost-425407.appspot.com',
   messagingSenderId: '572711905188',
-  appId: '1:572711905188:web:a09bc3e2487a992b418331',
+  appId: 'APP_Id',
 };
 const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp, config.storage.url);
